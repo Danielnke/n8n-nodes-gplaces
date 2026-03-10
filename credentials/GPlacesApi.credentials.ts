@@ -20,7 +20,7 @@ export class GPlacesApi implements ICredentialType {
       },
       default: '',
       placeholder: 'Enter your Google API key',
-      description: 'Your Google Places API key. Get it from Google Cloud Console.',
+      description: 'Your Google Places API key. Get it from Google Cloud Console. Ensure Places API (New) is enabled.',
     },
   ];
 
