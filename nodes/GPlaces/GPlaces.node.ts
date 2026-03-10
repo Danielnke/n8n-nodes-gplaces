@@ -474,6 +474,17 @@ export class GPlaces implements INodeType {
               pageSize: Math.min(Math.max(pageSize, 1), 20),
             };
 
+            // DEBUG: Log the request for debugging
+            console.log('=== TEXT SEARCH DEBUG ===');
+            console.log('URL:', 'https://places.googleapis.com/v1/places:searchText');
+            console.log('Body:', JSON.stringify(body, null, 2));
+            console.log('Headers:', JSON.stringify({
+              'Content-Type': 'application/json',
+              'X-Goog-Api-Key': apiKey ? 'SET' : 'MISSING',
+              'X-Goog-FieldMask': fullFieldMask
+            }, null, 2));
+            console.log('===========================');
+
             // Add optional parameters
             if (includedType) {
               body.includedType = includedType;
@@ -578,13 +589,16 @@ export class GPlaces implements INodeType {
           
           if (locationRestrictionRaw) {
             try {
-              // Handle both string and object cases
+              // Handle both string and object cases - always stringify then parse to ensure correct format
               if (typeof locationRestrictionRaw === 'string') {
                 if (locationRestrictionRaw.trim() !== '' && locationRestrictionRaw !== '{}') {
-                  locationRestriction = JSON.parse(locationRestrictionRaw) as IDataObject;
+                  // Parse to validate, then stringify and parse again to deep clone
+                  const parsed = JSON.parse(locationRestrictionRaw);
+                  locationRestriction = JSON.parse(JSON.stringify(parsed));
                 }
               } else if (typeof locationRestrictionRaw === 'object') {
-                locationRestriction = locationRestrictionRaw as IDataObject;
+                // Already parsed - stringify then parse to deep clone
+                locationRestriction = JSON.parse(JSON.stringify(locationRestrictionRaw));
               }
             } catch {
               throw new NodeApiError(this.getNode(), {
@@ -637,6 +651,17 @@ export class GPlaces implements INodeType {
               locationRestriction,
               maxResultCount: Math.min(Math.max(maxResultCount, 1), 20),
             };
+
+            // DEBUG: Log the request for debugging
+            console.log('=== NEARBY SEARCH DEBUG ===');
+            console.log('URL:', 'https://places.googleapis.com/v1/places:searchNearby');
+            console.log('Body:', JSON.stringify(body, null, 2));
+            console.log('Headers:', JSON.stringify({
+              'Content-Type': 'application/json',
+              'X-Goog-Api-Key': apiKey ? 'SET' : 'MISSING',
+              'X-Goog-FieldMask': fullFieldMask
+            }, null, 2));
+            console.log('===========================');
 
             // Add optional parameters
             if (includedTypes && includedTypes.length > 0) {
