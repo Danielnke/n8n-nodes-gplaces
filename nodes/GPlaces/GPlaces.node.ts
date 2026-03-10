@@ -524,6 +524,7 @@ export class GPlaces implements INodeType {
               url: 'https://places.googleapis.com/v1/places:searchText',
               body,
               headers: {
+                'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
                 'X-Goog-FieldMask': fullFieldMask,
               },
@@ -560,7 +561,6 @@ export class GPlaces implements INodeType {
 
         // ==================== NEARBY SEARCH ====================
         if (operation === 'nearbySearch') {
-          const locationRestrictionStr = this.getNodeParameter('nearbyLocationRestriction', i) as string;
           const includedTypesStr = this.getNodeParameter('nearbyIncludedTypes', i) as string;
           const excludedTypesStr = this.getNodeParameter('nearbyExcludedTypes', i) as string;
           const includedPrimaryTypesStr = this.getNodeParameter('nearbyIncludedPrimaryTypes', i) as string;
@@ -572,10 +572,20 @@ export class GPlaces implements INodeType {
           const fields = this.getNodeParameter('fields', i) as string[];
 
           // Parse location restriction - required
+          // Note: n8n's 'json' type can return either a string or an already-parsed object
+          let locationRestrictionRaw = this.getNodeParameter('nearbyLocationRestriction', i);
           let locationRestriction: IDataObject | undefined;
-          if (locationRestrictionStr && locationRestrictionStr !== '{}') {
+          
+          if (locationRestrictionRaw) {
             try {
-              locationRestriction = JSON.parse(locationRestrictionStr) as IDataObject;
+              // Handle both string and object cases
+              if (typeof locationRestrictionRaw === 'string') {
+                if (locationRestrictionRaw.trim() !== '' && locationRestrictionRaw !== '{}') {
+                  locationRestriction = JSON.parse(locationRestrictionRaw) as IDataObject;
+                }
+              } else if (typeof locationRestrictionRaw === 'object') {
+                locationRestriction = locationRestrictionRaw as IDataObject;
+              }
             } catch {
               throw new NodeApiError(this.getNode(), {
                 message: 'Invalid JSON in Location Restriction field. Use format: {"circle": {"center": {"latitude": 37.4, "longitude": -122.1}, "radius": 1000}}',
@@ -666,6 +676,7 @@ export class GPlaces implements INodeType {
               url: 'https://places.googleapis.com/v1/places:searchNearby',
               body,
               headers: {
+                'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
                 'X-Goog-FieldMask': fullFieldMask,
               },
@@ -699,14 +710,33 @@ export class GPlaces implements INodeType {
       } catch (error) {
         // Provide more helpful error messages for common issues
         let errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        let errorDetails = '';
 
-        if (errorMessage.includes('403')) {
+        // Try to extract more details from the error response
+        if (error && typeof error === 'object' && 'response' in error) {
+          const response = (error as { response?: { data?: { error?: { message?: string } } } }).response;
+          if (response?.data?.error?.message) {
+            errorDetails = response.data.error.message;
+            errorMessage = `Google API Error: ${errorDetails}`;
+          }
+        }
+
+        if (errorMessage.includes('403') || errorDetails.includes('403')) {
           errorMessage = 'Google Places API returned 403 Forbidden. This is usually caused by:\n' +
             '1. API key not having the Places API (New) enabled in Google Cloud Console\n' +
             '2. API key has IP or HTTP referrer restrictions that exclude your n8n server\n' +
             '3. API key quota has been exceeded\n' +
             '4. API key is invalid or expired\n\n' +
             'Please check your API key settings in Google Cloud Console.';
+        }
+
+        if (errorMessage.includes('400') || errorDetails.includes('400')) {
+          errorMessage = 'Google Places API returned 400 Bad Request. This is usually caused by:\n' +
+            '1. Invalid location restriction format\n' +
+            '2. Missing required parameters\n' +
+            '3. Invalid field mask\n' +
+            `4. Details: ${errorDetails}\n\n` +
+            'Please check your location coordinates and other parameters.';
         }
 
         if (error instanceof NodeApiError) {
