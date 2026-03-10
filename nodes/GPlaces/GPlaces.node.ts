@@ -522,7 +522,7 @@ export class GPlaces implements INodeType {
             const response = await this.helpers.httpRequest({
               method: 'POST',
               url: 'https://places.googleapis.com/v1/places:searchText',
-              body: JSON.stringify(body),
+              body: body,
               headers: {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
@@ -635,12 +635,23 @@ export class GPlaces implements INodeType {
           let nextPageToken: string | undefined;
           let hasMore = true;
 
-          while (hasMore) {
+           while (hasMore) {
             // Only include required parameters plus any user-specified optional ones
             const body: IDataObject = {
               locationRestriction,
               maxResultCount: Math.min(Math.max(maxResultCount, 1), 20),
             };
+
+            // DEBUG: Log the request for debugging
+            console.log('=== NEARBY SEARCH DEBUG ===');
+            console.log('URL:', 'https://places.googleapis.com/v1/places:searchNearby');
+            console.log('Body:', JSON.stringify(body, null, 2));
+            console.log('Headers:', JSON.stringify({
+              'Content-Type': 'application/json',
+              'X-Goog-Api-Key': apiKey ? 'SET' : 'MISSING',
+              'X-Goog-FieldMask': fullFieldMask
+            }, null, 2));
+            console.log('===========================');
 
             // Only add optional parameters if user specified them
             if (includedTypes && includedTypes.length > 0) {
@@ -678,7 +689,7 @@ export class GPlaces implements INodeType {
             const response = await this.helpers.httpRequest({
               method: 'POST',
               url: 'https://places.googleapis.com/v1/places:searchNearby',
-              body: JSON.stringify(body),
+              body: body,
               headers: {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
