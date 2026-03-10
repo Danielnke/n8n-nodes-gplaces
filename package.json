@@ -1,0 +1,43 @@
+{
+  "name": "n8n-nodes-gplaces",
+  "version": "1.0.0",
+  "description": "Google Places API node for n8n - Text Search, Nearby Search, Place Details",
+  "keywords": [
+    "n8n-community-node-package",
+    "google-places",
+    "google-maps",
+    "places-api"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Danielnke/n8n-nodes-gplaces",
+  "author": {
+    "name": "Danielnke",
+    "url": "https://github.com/Danielnke"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Danielnke/n8n-nodes-gplaces"
+  },
+  "main": "dist/index.js",
+  "n8n": {
+    "nodes": [
+      "dist/nodes/GPlaces/GPlaces.node.js"
+    ],
+    "credentials": [
+      "dist/credentials/GPlacesApi.credentials.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "n8n-workflow": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
