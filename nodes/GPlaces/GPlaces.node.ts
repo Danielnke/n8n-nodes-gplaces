@@ -7,6 +7,10 @@ import {
   NodeApiError,
 } from 'n8n-workflow';
 
+interface GPlacesApiCredentials {
+  apiKey: string;
+}
+
 export class GPlaces implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'GPlaces',
@@ -274,6 +278,10 @@ export class GPlaces implements INodeType {
     const items = this.getInputData();
     const returnData: INodeExecutionData[] = [];
 
+    // Get credentials with API key
+    const credentials = await this.getCredentials<GPlacesApiCredentials>('gPlacesApi');
+    const apiKey = credentials.apiKey;
+
     for (let i = 0; i < items.length; i++) {
       const operation = this.getNodeParameter('operation', i) as string;
 
@@ -391,6 +399,7 @@ export class GPlaces implements INodeType {
               url: 'https://places.googleapis.com/v1/places:searchText',
               body,
               headers: {
+                'X-Goog-Api-Key': apiKey,
                 'X-Goog-FieldMask': fullFieldMask,
               },
             });
