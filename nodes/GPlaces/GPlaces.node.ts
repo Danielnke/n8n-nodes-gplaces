@@ -11,6 +11,7 @@ export class GPlaces implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'GPlaces',
     name: 'gPlaces',
+    icon: 'file:logo.png',
     group: ['output'],
     version: 1,
     description: 'Interact with Google Places API',

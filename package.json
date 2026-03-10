@@ -32,7 +32,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -e \"const fs=require('fs');const src='nodes/GPlaces/logo.png';if(fs.existsSync(src))fs.copyFileSync(src,'dist/nodes/GPlaces/logo.png')\"",
     "dev": "tsc --watch",
     "lint": "eslint .",
     "test": "jest"
