@@ -1,7 +1,5 @@
 import {
-  ICredentialDataDecryptedObject,
   ICredentialType,
-  IHttpRequestOptions,
   INodeProperties,
 } from 'n8n-workflow';
 
@@ -23,19 +21,4 @@ export class GPlacesApi implements ICredentialType {
       description: 'Your Google Places API key. Get it from Google Cloud Console. Ensure Places API (New) is enabled.',
     },
   ];
-
-  async authenticate(
-    credentials: ICredentialDataDecryptedObject,
-    requestOptions: IHttpRequestOptions,
-  ): Promise<IHttpRequestOptions> {
-    const apiKey = credentials.apiKey as string;
-
-    return {
-      ...requestOptions,
-      headers: {
-        ...requestOptions.headers,
-        'X-Goog-Api-Key': apiKey,
-      },
-    };
-  }
 }
