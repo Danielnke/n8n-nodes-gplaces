@@ -474,23 +474,12 @@ export class GPlaces implements INodeType {
               pageSize: Math.min(Math.max(pageSize, 1), 20),
             };
 
-            // DEBUG: Log the request for debugging
-            console.log('=== TEXT SEARCH DEBUG ===');
-            console.log('URL:', 'https://places.googleapis.com/v1/places:searchText');
-            console.log('Body:', JSON.stringify(body, null, 2));
-            console.log('Headers:', JSON.stringify({
-              'Content-Type': 'application/json',
-              'X-Goog-Api-Key': apiKey ? 'SET' : 'MISSING',
-              'X-Goog-FieldMask': fullFieldMask
-            }, null, 2));
-            console.log('===========================');
-
-            // Add optional parameters
+            // Only add optional parameters if user specified them
             if (includedType) {
               body.includedType = includedType;
             }
 
-            if (languageCode) {
+            if (languageCode && languageCode !== 'en') {
               body.languageCode = languageCode;
             }
 
@@ -506,7 +495,7 @@ export class GPlaces implements INodeType {
               body.priceLevels = priceLevels;
             }
 
-            if (rankPreference) {
+            if (rankPreference && rankPreference !== 'RELEVANCE') {
               body.rankPreference = rankPreference;
             }
 
@@ -647,23 +636,13 @@ export class GPlaces implements INodeType {
           let hasMore = true;
 
           while (hasMore) {
+            // Only include required parameters plus any user-specified optional ones
             const body: IDataObject = {
               locationRestriction,
               maxResultCount: Math.min(Math.max(maxResultCount, 1), 20),
             };
 
-            // DEBUG: Log the request for debugging
-            console.log('=== NEARBY SEARCH DEBUG ===');
-            console.log('URL:', 'https://places.googleapis.com/v1/places:searchNearby');
-            console.log('Body:', JSON.stringify(body, null, 2));
-            console.log('Headers:', JSON.stringify({
-              'Content-Type': 'application/json',
-              'X-Goog-Api-Key': apiKey ? 'SET' : 'MISSING',
-              'X-Goog-FieldMask': fullFieldMask
-            }, null, 2));
-            console.log('===========================');
-
-            // Add optional parameters
+            // Only add optional parameters if user specified them
             if (includedTypes && includedTypes.length > 0) {
               body.includedTypes = includedTypes;
             }
@@ -680,11 +659,11 @@ export class GPlaces implements INodeType {
               body.excludedPrimaryTypes = excludedPrimaryTypes;
             }
 
-            if (languageCode) {
+            if (languageCode && languageCode !== 'en') {
               body.languageCode = languageCode;
             }
 
-            if (rankPreference) {
+            if (rankPreference && rankPreference !== 'POPULARITY') {
               body.rankPreference = rankPreference;
             }
 
