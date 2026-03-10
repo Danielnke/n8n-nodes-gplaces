@@ -578,18 +578,25 @@ export class GPlaces implements INodeType {
           
           if (locationRestrictionRaw) {
             try {
-              // Handle both string and object cases - always stringify then parse to ensure correct format
+              // Handle both string and object cases
               if (typeof locationRestrictionRaw === 'string') {
                 if (locationRestrictionRaw.trim() !== '' && locationRestrictionRaw !== '{}') {
-                  // Parse to validate, then stringify and parse again to deep clone
+                  // Parse to validate and use directly
                   const parsed = JSON.parse(locationRestrictionRaw);
-                  locationRestriction = JSON.parse(JSON.stringify(parsed));
+                  locationRestriction = parsed;
+                  console.log('=== Parsed Location Restriction ===');
+                  console.log('Type:', typeof parsed);
+                  console.log('Value:', JSON.stringify(parsed, null, 2));
                 }
               } else if (typeof locationRestrictionRaw === 'object') {
-                // Already parsed - stringify then parse to deep clone
-                locationRestriction = JSON.parse(JSON.stringify(locationRestrictionRaw));
+                // Already parsed - use directly
+                locationRestriction = locationRestrictionRaw as IDataObject;
+                console.log('=== Already Parsed Location Restriction ===');
+                console.log('Type:', typeof locationRestrictionRaw);
+                console.log('Value:', JSON.stringify(locationRestrictionRaw, null, 2));
               }
-            } catch {
+            } catch (error) {
+              console.error('Error parsing location restriction:', error);
               throw new NodeApiError(this.getNode(), {
                 message: 'Invalid JSON in Location Restriction field. Use format: {"circle": {"center": {"latitude": 37.4, "longitude": -122.1}, "radius": 1000}}',
               });
