@@ -27,8 +27,14 @@
       "dist/credentials/GPlacesApi.credentials.js"
     ]
   },
+  "files": [
+    "dist",
+    "nodes",
+    "credentials",
+    "package.json"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').copyFileSync('nodes/GPlaces/google-places.svg', 'dist/nodes/GPlaces/google-places.svg')\"",
     "dev": "tsc --watch",
     "lint": "eslint .",
     "test": "jest"
