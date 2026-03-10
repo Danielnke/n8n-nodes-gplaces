@@ -522,7 +522,7 @@ export class GPlaces implements INodeType {
             const response = await this.helpers.httpRequest({
               method: 'POST',
               url: 'https://places.googleapis.com/v1/places:searchText',
-              body,
+              body: JSON.stringify(body),
               headers: {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
@@ -678,7 +678,7 @@ export class GPlaces implements INodeType {
             const response = await this.helpers.httpRequest({
               method: 'POST',
               url: 'https://places.googleapis.com/v1/places:searchNearby',
-              body,
+              body: JSON.stringify(body),
               headers: {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
