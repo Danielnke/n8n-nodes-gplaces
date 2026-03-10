@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-gplaces",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Google Places API node for n8n - Text Search, Nearby Search, Place Details",
   "keywords": [
     "n8n-community-node-package",
@@ -32,7 +32,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsc && node -e \"require('fs').copyFileSync('nodes/GPlaces/google-places.svg', 'dist/nodes/GPlaces/google-places.svg')\"",
+    "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint .",
     "test": "jest"
