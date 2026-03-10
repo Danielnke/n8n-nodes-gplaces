@@ -1,7 +1,27 @@
-node_modules/
+# Source code (only dist/ is needed)
+*.ts
+!*.d.ts
+tsconfig.json
+
+# Build output
 dist/
+node_modules/
+
+# Git
 .git
 .gitignore
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp
 *.log
 *.tmp
-.DS_Store
+
+# Test coverage
+coverage/

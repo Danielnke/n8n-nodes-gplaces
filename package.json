@@ -29,8 +29,6 @@
   },
   "files": [
     "dist",
-    "nodes",
-    "credentials",
     "package.json"
   ],
   "scripts": {
