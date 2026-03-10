@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#4285F4"/>
+  
+  <!-- Location pin shape -->
+  <path d="M32 12c-9.94 0-18 8.06-18 18 0 13.5 18 26 18 26s18-12.5 18-26c0-9.94-8.06-18-18-18z" fill="white"/>
+  
+  <!-- Inner circle (pin center) -->
+  <circle cx="32" cy="30" r="7" fill="#4285F4"/>
+  
+  <!-- Small dot inside -->
+  <circle cx="32" cy="30" r="3" fill="white"/>
+</svg>
